@@ -8,17 +8,25 @@
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <script>
-    const BACKEND = "https://randomsubdomain.trycloudflare.com";
+    const BACKEND = "https://reporter-und-copyrighted-mtv.trycloudflare.com";
 
     const socket = io(BACKEND, { transports: ["websocket"] });
-    function log(t){const d=document.createElement("div");d.textContent=typeof t==="string"?t:JSON.stringify(t);document.getElementById("log").appendChild(d);}
+    function log(t){
+      const d = document.createElement("div");
+      d.textContent = typeof t === "string" ? t : JSON.stringify(t);
+      document.getElementById("log").appendChild(d);
+    }
 
     socket.on("connect", ()=>log("connected"));
     socket.on("message", (m)=>log(m));
 
-    document.getElementById("send").onclick=()=>{
-      const el=document.getElementById("msg");const v=el.value;
-      if(v){socket.send(v);el.value="";}
+    document.getElementById("send").onclick = ()=>{
+      const el = document.getElementById("msg");
+      const v = el.value;
+      if(v){
+        socket.send(v);
+        el.value = "";
+      }
     };
   </script>
 </body>
