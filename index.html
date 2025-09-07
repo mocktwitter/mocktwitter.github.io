@@ -1,33 +1,32 @@
-<!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Chat</title></head>
-<body>
-  <h1>Chat</h1>
-  <div id="log"></div>
-  <input id="msg" placeholder="message"><button id="send">Send</button>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+  const BACKEND = "https://YOUR-TUNNEL.trycloudflare.com";
 
-  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script>
-    const BACKEND = "https://reporter-und-copyrighted-mtv.trycloudflare.com";
+  const logDiv = document.getElementById("log");
+  function line(t){
+    const d = document.createElement("div");
+    d.textContent = typeof t === "string" ? t : JSON.stringify(t);
+    logDiv.appendChild(d);
+    logDiv.scrollTop = logDiv.scrollHeight;
+  }
 
-    const socket = io(BACKEND, { transports: ["websocket"] });
-    function log(t){
-      const d = document.createElement("div");
-      d.textContent = typeof t === "string" ? t : JSON.stringify(t);
-      document.getElementById("log").appendChild(d);
-    }
+  const socket = io(BACKEND, { transports: ["websocket"] });
 
-    socket.on("connect", ()=>log("connected"));
-    socket.on("message", (m)=>log(m));
+  // 1) receive full history on connect
+  socket.on("history", (arr) => {
+    logDiv.innerHTML = "";
+    for (const m of arr) line(m);
+    line("— history loaded —");
+  });
 
-    document.getElementById("send").onclick = ()=>{
-      const el = document.getElementById("msg");
-      const v = el.value;
-      if(v){
-        socket.send(v);
-        el.value = "";
-      }
-    };
-  </script>
-</body>
-</html>
+  // 2) live messages
+  socket.on("connect", () => line("connected"));
+  socket.on("message", (m) => line(m));
+
+  // 3) send
+  document.getElementById("send").onclick = () => {
+    const el = document.getElementById("msg");
+    const v = el.value.trim();
+    if (v) { socket.send(v); el.value = ""; }
+  };
+</script>
