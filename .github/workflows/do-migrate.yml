@@ -6,9 +6,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Wrangler apply migration
+      - name: Wrangler diagnostics + migration
         uses: cloudflare/wrangler-action@v3
         with:
+          # pin a stable Wrangler to avoid breaking changes
+          wranglerVersion: "3.80.3"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: wrangler migrations apply mocktwitter --verbose
+          command: |
+            wrangler --version
+            wrangler whoami --verbose
+            wrangler pages project info mocktwitter --verbose
+            wrangler migrations list mocktwitter --verbose || true
+            wrangler migrations apply mocktwitter --verbose
