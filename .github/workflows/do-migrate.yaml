@@ -7,6 +7,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.0bxL_UNjQzVo_IEqJvObdfpcKAwRNyo-P0JCp90I }}
-          accountId: ${{ secrets.f1eb2c88041949b813f789ee8cb9caa9 }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: npx wrangler migrations apply
