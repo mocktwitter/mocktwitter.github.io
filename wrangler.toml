@@ -16,4 +16,4 @@ new_classes = ["ChatRoom"]
 [[d1_databases]]
 binding = "DB"
 database_name = "chatdb"
-database_id = "<your-db-id>"
+database_id = "<e241015f-8ee4-4c05-aebe-a39269ea513c>"
