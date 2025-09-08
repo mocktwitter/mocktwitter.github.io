@@ -1,0 +1,19 @@
+name = "chat-pages"
+main = "_worker.js"
+compatibility_date = "2025-09-07"
+
+[assets]
+directory = "public"
+
+[[durable_objects.bindings]]
+name = "CHAT_ROOM"
+class_name = "ChatRoom"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["ChatRoom"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "chatdb"
+database_id = "<your-db-id>"
