@@ -3,17 +3,22 @@ on: workflow_dispatch
 jobs:
   migrate:
     runs-on: ubuntu-latest
+    env:
+      WRANGLER_LOG: debug
     steps:
       - uses: actions/checkout@v4
-      - name: Wrangler diagnostics + migrate
-        uses: cloudflare/wrangler-action@v3
+      - name: Verify files
+        run: |
+          pwd
+          ls -la
+          test -f wrangler.toml || (echo "wrangler.toml missing" && exit 1)
+          test -f _worker.js || (echo "_worker.js missing" && exit 1)
+      - uses: cloudflare/wrangler-action@v3
         with:
-          wranglerVersion: "3.80.3"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: |
             wrangler --version
-            wrangler whoami --verbose
-            wrangler pages project info mocktwitter --verbose
-            wrangler migrations list mocktwitter --verbose || true
-            wrangler migrations apply mocktwitter --verbose
+            wrangler whoami
+            wrangler migrations list
+            wrangler migrations apply
