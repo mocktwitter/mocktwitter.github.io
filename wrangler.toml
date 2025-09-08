@@ -1,19 +1,14 @@
-name = "chat-pages"
-main = "_worker.js"
-compatibility_date = "2025-09-07"
-
-[assets]
-directory = "public"
-
-[[durable_objects.bindings]]
-name = "CHAT_ROOM"
-class_name = "ChatRoom"
-
-[[migrations]]
-tag = "v1"
-new_classes = ["ChatRoom"]
-
-[[d1_databases]]
-binding = "DB"
-database_name = "chatdb"
-database_id = "<e241015f-8ee4-4c05-aebe-a39269ea513c>"
+# .github/workflows/do-migrate.yml
+name: DO migration
+on: workflow_dispatch
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # applies [[migrations]] from wrangler.toml at repo root
+          command: wrangler migrations apply
